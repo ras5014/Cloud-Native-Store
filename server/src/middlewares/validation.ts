@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { type ZodType } from "zod"; // ZodSchema is now ZodType
 
 /**
@@ -6,9 +6,10 @@ import { type ZodType } from "zod"; // ZodSchema is now ZodType
  * It can be used to ensure that incoming requests contain the expected data structure and types.
  */
 export const validateBody = (schema: ZodType) => {
-  return (req: Request, res: Response) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     const validatedData = schema.parse(req.body);
     req.body = validatedData;
+    next();
   };
 };
 
@@ -17,8 +18,9 @@ export const validateBody = (schema: ZodType) => {
  * It can be used to ensure that incoming requests contain the expected data structure and types.
  */
 export const validateParams = (schema: ZodType) => {
-  return (req: Request, res: Response) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     schema.parse(req.params);
+    next();
   };
 };
 
@@ -27,7 +29,8 @@ export const validateParams = (schema: ZodType) => {
  * It can be used to ensure that incoming requests contain the expected data structure and types.
  */
 export const validateQuery = (schema: ZodType) => {
-  return (req: Request, res: Response) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     schema.parse(req.query);
+    next();
   };
 };

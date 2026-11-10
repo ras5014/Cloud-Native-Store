@@ -5,7 +5,7 @@ const PORT = env.PORT;
 
 app
   .listen(PORT, () => {
-    console.table(env);
+    if (env.NODE_ENV === "development") console.table(env);
     console.log(`Server is running on http://localhost:${PORT}`);
   })
   .on("error", (err) => {
