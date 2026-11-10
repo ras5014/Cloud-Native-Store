@@ -13,6 +13,11 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "product-service" });
 });
 
+app.use(
+  "/api/products",
+  (await import("./modules/products/product.routes.ts")).default,
+);
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 export default app;
