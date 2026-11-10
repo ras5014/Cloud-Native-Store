@@ -6,6 +6,7 @@ const envSchema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(3000),
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
+  DATABASE_URI: z.string().startsWith("postgresql://"),
 });
 
 export const env = envSchema.parse(process.env);
