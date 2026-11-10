@@ -6,28 +6,35 @@ import {
   updateProduct,
   deleteProduct,
 } from "./product.service.ts";
+import { successResponse } from "../../utils/responses.ts";
 
 export const productController = {
-  list: (req: Request, res: Response) => {
-    const products = getProducts();
+  list: async (req: Request, res: Response) => {
+    const products = await getProducts();
+    successResponse(res, products, 200, "Products retrieved successfully");
   },
 
-  create: (req: Request, res: Response) => {
-    res.status(201).json({ message: "Create a new product" });
+  create: async (req: Request, res: Response) => {
+    const input = req.body;
+    const product = await createProduct(input);
+    successResponse(res, product, 201, "Product created successfully");
   },
 
-  getById: (req: Request, res: Response) => {
+  getById: async (req: Request, res: Response) => {
     const { id } = req.params;
-    res.status(200).json({ message: `Get product with ID: ${id}` });
+    const product = await getProductById(id as string);
+    successResponse(res, product, 200, "Product retrieved successfully");
   },
 
-  update: (req: Request, res: Response) => {
+  update: async (req: Request, res: Response) => {
     const { id } = req.params;
-    res.status(200).json({ message: `Update product with ID: ${id}` });
+    const product = await updateProduct(id as string, req.body);
+    successResponse(res, product, 200, "Product updated successfully");
   },
 
-  delete: (req: Request, res: Response) => {
+  delete: async (req: Request, res: Response) => {
     const { id } = req.params;
-    res.status(200).json({ message: `Delete product with ID: ${id}` });
+    await deleteProduct(id as string);
+    successResponse(res, null, 200, "Product deleted successfully");
   },
 };
