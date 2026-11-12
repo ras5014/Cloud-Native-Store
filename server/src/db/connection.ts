@@ -18,5 +18,10 @@ if (env.NODE_ENV === "production") {
   client = remember("dbPool", () => createPool());
 }
 
+export const checkDBConnection = async (): Promise<void> => {
+  await client.query("SELECT 1");
+  console.log("Database connected successfully");
+};
+
 export const db = drizzle(client, { schema });
 export default db;
