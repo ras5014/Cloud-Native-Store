@@ -13,9 +13,16 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "product-service" });
 });
 
+// products route
 app.use(
   "/api/products",
   (await import("./modules/products/product.routes.ts")).default,
+);
+
+// orders route
+app.use(
+  "/api/orders",
+  (await import("./modules/orders/order.routes.ts")).default,
 );
 
 app.use(notFoundHandler);
