@@ -36,6 +36,7 @@ export const getProductById = async (
   return product;
 };
 
+// TODO: Update the updatedAt time
 export const updateProduct = async (
   id: string,
   input: z.infer<typeof updateProductSchema>,
