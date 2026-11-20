@@ -1,0 +1,36 @@
+services:
+  # api
+  express-api:
+    container_name: api
+    restart: unless-stopped
+    build:
+      context: ./
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    command: sh -c "npm run db:push && npm run dev" # Override the default command to use nodemon for development
+
+  # Database
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:18-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres # Database username
+      POSTGRES_PASSWORD: password # Database password
+      POSTGRES_DB: cloud_native_store # Database name
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cloud_native_store"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
