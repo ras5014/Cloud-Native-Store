@@ -12,9 +12,19 @@ services:
       - /app/node_modules
     env_file:
       - .env.docker
+
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "cloud-native-store-api"
+        fluentd-async: "true"
+
     depends_on:
       postgres:
         condition: service_healthy
+      fluent-bit:
+        condition: service_started
 
     command: sh -c "npm run db:push && npm run dev" # Override the default command to use nodemon for development
 
@@ -34,3 +44,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  # Fluent-Bit
+  fluent-bit:
+    container_name: fluent-bit
+    image: fluent/fluent-bit:5.2.1
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:24224:24224"
+
+    volumes:
+      - ./src/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./src/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro
