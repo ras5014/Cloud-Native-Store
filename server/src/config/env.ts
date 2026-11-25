@@ -13,6 +13,9 @@ const envSchema = z.object({
       (uri) => uri.startsWith("postgres://") || uri.startsWith("postgresql://"),
       { error: "DATABASE_URI must start with postgres:// or postgresql://" },
     ),
+  LOG_LEVEL: z
+    .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
+    .default("info"),
 });
 
 export const env = envSchema.parse(process.env);
