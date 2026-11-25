@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { remember } from "@epic-web/remember";
 import { env } from "../config/env.ts";
 import * as schema from "./schema.ts";
+import { logger } from "../utils/logger.ts";
 
 const createPool = () => {
   return new Pool({
@@ -20,7 +21,7 @@ if (env.NODE_ENV === "production") {
 
 export const checkDBConnection = async (): Promise<void> => {
   await client.query("SELECT 1");
-  console.log("Database connected successfully");
+  logger.info("Database connected successfully");
 };
 
 export const db = drizzle(client, { schema });
